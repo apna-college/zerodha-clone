@@ -15,8 +15,26 @@ const uri = process.env.MONGO_URL;
 
 const app = express();
 
-app.use(cors());
-app.use(bodyParser.json());
+// index.js (Backend)
+
+// Allowed origins ki list define karein
+const allowedOrigins = [
+    'http://localhost:5173', // Local URL
+    'https://tradeup-frontend.onrender.com', 
+    'https://tradeup-dashboard.onrender.com', // **Apna Live Dashboard URL Yahan Daalein!**
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true, // Clerk ke liye zaroori
+    optionsSuccessStatus: 200
+}));
 
 // app.get("/addHoldings", async (req, res) => {
 //   let tempHoldings = [
